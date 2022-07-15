@@ -1,0 +1,21 @@
+{
+  "name": "LaunchpadNode",
+  "version": "1.0.0",
+  "description": "fucking around with launchpad in node",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "ts-node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "http": "^0.0.1-security",
+    "launchpad-mini": "^2.3.3",
+    "launchpad-webmidi": "git+https://git@github.com/LostInBrittany/launchpad-webmidi.git",
+    "node-audio-volume-mixer": "^1.0.3",
+    "nodemon": "^2.0.19",
+    "path": "^0.12.7",
+    "prompt-sync": "^4.2.0",
+    "socket.io": "^4.5.1",
+    "ts-node": "^10.8.2"
+  }
+}
