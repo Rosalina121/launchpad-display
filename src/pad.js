@@ -7,7 +7,7 @@ import Launchpad from "launchpad-mini";
 const prompt = require("prompt-sync")({ sigint: true });
 
 export let pad = {};
-export let clockMode = "modern"; // starting clock mode
+export let clockMode = "classic"; // starting clock mode
 export let useNeoNumber = clockMode === "modern" ? true : false;
 export let mode = "clock"; // starting mode
 
@@ -114,6 +114,7 @@ const swapToClock = () => {
 const swapToCharacter = () => {
     pad.reset(0);
     pad.col(pad.green, [8, 2]);
+    pad.col(pad.amber.low, [0, 8]);
 };
 
 export function changeMode(checkMode = mode) {
