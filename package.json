@@ -1,5 +1,5 @@
 {
-  "name": "LaunchpadNode",
+  "name": "launchpad-display",
   "version": "1.0.0",
   "description": "fucking around with launchpad in node",
   "main": "src/index.js",
