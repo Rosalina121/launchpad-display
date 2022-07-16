@@ -1,4 +1,4 @@
-import { pad } from "../pad";
+import { mode, pad } from "../pad";
 import LawrenceSans from "../lawrencesans";
 
 
@@ -88,7 +88,7 @@ const scrollCharacterString = (charArrays, color) => {
             if (currentCharPos > charCount) {
                 charArray = [];
             }
-            if (currentCharPos === charCount + 1) {
+            if (currentCharPos === charCount + 1 || mode !== "character") {
                 clearInterval(drawArrayInterval);
                 resolve();
             }
