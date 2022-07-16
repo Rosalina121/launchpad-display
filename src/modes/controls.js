@@ -38,14 +38,6 @@ const checkVolumeForUpdates = () => {
         const newVolume = getVolume();
         const newMuted = checkIfMuted();
         const key = { x: 7, y: newVolume };
-        console.log(
-            "is muted",
-            isMuted,
-            "new muted",
-            newMuted,
-            "new volume",
-            newVolume
-        );
         if (
             (isMuted !== newMuted && newMuted) ||
             (newVolume === 8 && newVolume !== volume)
