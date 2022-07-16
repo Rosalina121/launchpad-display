@@ -31,6 +31,9 @@ const cleanOnNewTime = (oldDate, dd) => {
 };
 
 export const clockLoop = () => {
+    pad.reset(0);
+    pad.col(pad.amber.low, [0, 8]);
+    
     let oldDate = "";
     let on = false;
     let oldMode = "modern"; // default mode, subject to change

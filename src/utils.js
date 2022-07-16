@@ -1,6 +1,6 @@
 import { pad } from "./pad";
 
 
-export const colorSingleKeyWithcolor = (key, color) => {
-    pad.col(color, [key.x, key.y]);
+export const colorSingleKeyWithColor = (key, color) => {
+    pad.col(color, key);
 };

@@ -3,11 +3,13 @@ import express from "express";
 import http from "http";
 import path from "path";
 import bodyParser from "body-parser";
+import { idfk } from "./modes/visualizer";
 
 const app = express();
 const router = express.Router();
 const jsonParser = bodyParser.json();
 const server = http.createServer(app);
+
 
 app.use("/", router);
 
