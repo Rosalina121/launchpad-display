@@ -93,7 +93,18 @@ const indicateSelection = () => {
 
 const findKeyForColor = (color) => {
     let keyForColor;
-    // medium are split to avoid undefined error
+    // 🎶🎶🎶
+    // Standing here, I realize
+    // you wre are just like me
+    // trying to make sense of this
+    // but who's to judge
+    // the green.medium from green
+    // When our guard is down
+    // I think we'll both agree
+    // That shitty code breeds bugs
+    // But in the end it has to be this way
+    // 🎶🎶🎶
+
     if (color._level === 2) {
         if (color._name === "green") {
             keyForColor = [2, 8];
