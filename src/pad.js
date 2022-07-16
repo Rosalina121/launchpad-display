@@ -1,10 +1,10 @@
 import { initControls, handleControls } from "./modes/controls";
 import { drawString, getArrayToDrawForCharacter } from "./modes/character";
 import { clockLoop } from "./modes/clock";
-import * as utils from "./utils";
+import { handleDraw, initDraw } from "./modes/draw";
+import { initBadApple } from "./modes/badapple";
 
 import Launchpad from "launchpad-mini";
-import { handleDraw, initDraw } from "./modes/draw";
 const prompt = require("prompt-sync")({ sigint: true });
 
 export let pad = {};
@@ -12,7 +12,9 @@ export let clockMode = "classic"; // starting clock mode
 export let useNeoNumber = clockMode === "modern" ? true : false;
 export let mode = "clock"; // starting mode
 
-export const modes = ["clock", "character", "controls", "draw"];
+let isPlaying = false;
+
+export const modes = ["clock", "character", "controls", "draw", "bad apple"];
 
 export const toggleNeoNumber = () => {
     useNeoNumber = !useNeoNumber;
@@ -50,17 +52,19 @@ export const init = () => {
                     if (k.y === 3) {
                         changeMode("draw");
                     }
-                }
-
-                // CONTROLS
-                if (mode === "controls") {
-                    handleControls(k);
+                    if (k.y === 4) {
+                        changeMode("bad apple");
+                    }
                 }
                 // CLOCK
                 if (mode === "clock") {
                     if (k.y === 8 && k.x === 0) {
                         toggleNeoNumber();
                     }
+                }
+                // CONTROLS
+                if (mode === "controls") {
+                    handleControls(k);
                 }
                 // CHARACTER
                 if (mode === "character") {
@@ -69,9 +73,14 @@ export const init = () => {
                         const text = prompt("Enter text: ");
                         drawString(`${text}`, pad.green);
                     }
-                }// DRAW
+                }
+                // DRAW
                 if (mode === "draw") {
                     handleDraw(k);
+                }
+                // BAD APPLE
+                if (mode === "bad apple") {
+                    // change color idk
                 }
             }
         });
@@ -97,7 +106,6 @@ export const displayText = (text, color = "amber") => {
 
 // swap modes
 const swapToControls = () => {
-
     initControls();
 };
 
@@ -112,9 +120,17 @@ const swapToCharacter = () => {
 };
 
 const swapToDraw = () => {
-
     initDraw();
-}
+};
+
+const swapToBadApple = () => {
+    if (!isPlaying) {
+        isPlaying = true;
+        initBadApple().then(() => {
+            isPlaying = false;
+        });
+    }
+};
 
 export function changeMode(checkMode = mode) {
     if (modes.includes(checkMode)) {
@@ -133,6 +149,10 @@ export function changeMode(checkMode = mode) {
         case "draw":
             swapToDraw();
             break;
+        case "bad apple":
+            swapToBadApple();
+            break;
+
         default:
             break;
     }

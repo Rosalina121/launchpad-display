@@ -44,7 +44,7 @@ const getArrayOfCoordinatesForCharacter = (charArray) => {
     return array;
 };
 
-const drawArray = (arr, color) => {
+export const drawArray = (arr, color) => {
     pad.col(color, arr);
 };
 
@@ -145,7 +145,7 @@ function subtractTwoFrames(arr1, arr2) {
     return differenceAsArray;
 }
 
-function subtract2Arrays(subtractFrom, arr2) {
+export function subtract2Arrays(subtractFrom, arr2) {
     // convert both arrays to arrays of string
     const oldCharArrayAsString = subtractFrom.map((item) => {
         return item.join("");

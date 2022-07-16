@@ -55,6 +55,9 @@ Current options:
 
 You can chose either of the option form the top row buttons.
 
+### Bad Apple
+It plays Bad Apple!
+
 
 ## API
 This project not only enables interactions with the Launchpad via, well, the Launchpad, but it's also a web server. There are several endpoints that allow you to control the Launchpad.
