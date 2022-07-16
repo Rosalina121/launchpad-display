@@ -2,8 +2,12 @@ import { pad, mode } from "../pad";
 import { NodeAudioVolumeMixer } from "node-audio-volume-mixer";
 import * as utils from "../utils";
 
+import robot from "robotjs";
+
 export let volume;
 let isMuted;
+let isPlaying = false;
+
 export const initControls = () => {
     pad.reset(0);
     pad.col(pad.green, [8, 1]);
@@ -15,7 +19,9 @@ export const initControls = () => {
     checkVolumeForUpdates();
 
     // music
-
+    pad.col(pad.amber.low, [0, 7]);
+    pad.col(pad.amber.low, [1, 7]);
+    pad.col(pad.amber.low, [2, 7]);
 };
 
 const updateVolumeBarForVolume = (volume) => {
@@ -114,6 +120,12 @@ const volumeColorBarDisplayDimmed = (arr) => {
 };
 
 export const handleControls = (k) => {
+    // play/pause, next and back
+    if (k.y === 7 && k.x < 3) {
+        pad.col(pad.red.low, [k.x, 7]);
+        handleMusic(k);
+        pad.col(pad.amber.low, [k.x, 7]);
+    }
     if (k.x === 6) {
         handleBarTemplate(k);
     }
@@ -173,7 +185,49 @@ const createArrayForKey = (key) => {
     return arrayToColor;
 }
 
+function handleMusic(k) {
+    if (k.x === 0) {
+        pad.col(pad.red.low, [k.x, 7]);
+        robot.keyTap("audio_prev");
+        pad.col(pad.amber.low, [k.x, 7]);
+
+    }
+    if (k.x === 1) {
+        isPlaying = !isPlaying;
+        indicatePlaying()
+        robot.keyTap("audio_play");
+    }
+    if (k.x === 2) {
+        pad.col(pad.red.low, [k.x, 7]);
+        robot.keyTap("audio_next");
+        pad.col(pad.amber.low, [k.x, 7]);
+    }
+}
+
 function dimVolumeBar() {
     const arrayToColor = createArrayForBarDisplay({ x: 7, y: getSystemVolume() });
     volumeColorBarDisplayDimmed(arrayToColor);
 }
+function indicatePlaying() {
+    let on = true;
+    const clockLoopInterval = setInterval(() => {
+        if (mode === "controls") {
+            if (on) {
+                pad.col(pad.green.low, [1, 7]);
+                on = false;
+            } else {
+                pad.col(pad.amber.low, [1, 7]);
+                on = true;
+            }
+            if (!isPlaying){
+                pad.col(pad.amber.low, [1, 7]);
+                clearInterval(clockLoopInterval);
+            }
+        } else {
+            pad.col(pad.off, [8, 0]);
+            // exit iterval
+            clearInterval(clockLoopInterval);
+        }
+    }, 500);
+}
+

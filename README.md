@@ -29,8 +29,12 @@ You can use the 🔼 button to change the font face to:
 - classic - 4x3 pixel arabic numbers
 - modern - a custom 4x4 symbol set (unintuitive at first)
 ### Controls
+In this mode you can control various stuff like volume and music.
 Currently you can control:
 - master audio volume
+- play/pause, next, previous
+
+Note: the play/pause button uses stupid logic for blinking when active and *does not* know if the music was already playing or not.
 ### Character
 In this mode you can print to Launchpad a string of characters.  
 There are 2 ways to do so:
