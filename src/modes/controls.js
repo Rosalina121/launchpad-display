@@ -13,6 +13,9 @@ export const initControls = () => {
     volume = getVolume();
     updateVolumeBarForVolume(volume);
     checkVolumeForUpdates();
+
+    // music
+
 };
 
 const updateVolumeBarForVolume = (volume) => {
@@ -44,16 +47,13 @@ const checkVolumeForUpdates = () => {
         const newVolume = getSystemVolume();
         const newMuted = checkIfMuted();
         const key = { x: 7, y: newVolume };
-        console.log(newVolume, newMuted, isMuted, volume);
         if (
             (isMuted !== newMuted && newMuted) ||
             (newVolume === 8 && newVolume !== volume)
         ) {
-            console.log("mute!");
             clearColumnColor(key);
             utils.colorSingleKeyWithColor([7, 8], pad.red);
             dimVolumeBar();
-            console.log("muted");
             volume = 8;
             isMuted = newMuted;
         }
