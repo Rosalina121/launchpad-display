@@ -8,6 +8,7 @@ export const initControls = () => {
     pad.reset(0);
     pad.col(pad.green, [8, 1]);
     // volume
+    pad.col(pad.red.low, [7, 8]);
     isMuted = checkIfMuted();
     volume = getVolume();
     updateVolumeBarForVolume(volume);
@@ -24,10 +25,15 @@ const updateVolumeBarForVolume = (volume) => {
 };
 
 const getVolume = () => {
-    return Math.abs(
-        Math.ceil(NodeAudioVolumeMixer.getMasterVolumeLevelScalar() * 8) - 8
-    );
+    return volume && volume !== 8
+        ? volume
+        : getSystemVolume()
 };
+
+const getSystemVolume = () =>
+    Math.abs(
+        Math.round(NodeAudioVolumeMixer.getMasterVolumeLevelScalar() * 8) - 8
+    );
 
 const checkIfMuted = () => {
     return NodeAudioVolumeMixer.isMasterMuted();
@@ -35,15 +41,19 @@ const checkIfMuted = () => {
 
 const checkVolumeForUpdates = () => {
     const checkVolumeInterval = setInterval(() => {
-        const newVolume = getVolume();
+        const newVolume = getSystemVolume();
         const newMuted = checkIfMuted();
         const key = { x: 7, y: newVolume };
+        console.log(newVolume, newMuted, isMuted, volume);
         if (
             (isMuted !== newMuted && newMuted) ||
             (newVolume === 8 && newVolume !== volume)
         ) {
+            console.log("mute!");
             clearColumnColor(key);
             utils.colorSingleKeyWithColor([7, 8], pad.red);
+            dimVolumeBar();
+            console.log("muted");
             volume = 8;
             isMuted = newMuted;
         }
@@ -52,7 +62,7 @@ const checkVolumeForUpdates = () => {
             isMuted = false;
             clearColumnColor(key);
             // clear mute
-            utils.colorSingleKeyWithColor([7, 8], pad.off);
+            utils.colorSingleKeyWithColor([7, 8], pad.red.low);
             // update bar
             updateVolumeBarForVolume(newVolume);
 
@@ -91,6 +101,18 @@ const volumeColorBarDisplay = (arr) => {
     });
 };
 
+const volumeColorBarDisplayDimmed = (arr) => {
+    arr.map(([x, y]) => {
+        if (y > 2) {
+            pad.col(pad.green.low, [x, y]);
+        } else if (y > 0) {
+            pad.col(pad.amber.low, [x, y]);
+        } else {
+            pad.col(pad.red.low, [x, y]);
+        }
+    });
+};
+
 export const handleControls = (k) => {
     if (k.x === 6) {
         handleBarTemplate(k);
@@ -114,7 +136,8 @@ const handleVolume = (key) => {
         if (isMuted) {
             NodeAudioVolumeMixer.muteMaster(false);
             isMuted = false;
-            utils.colorSingleKeyWithColor([7, 8], pad.off);
+            utils.colorSingleKeyWithColor([7, 8], pad.red.low);
+            updateVolumeBarForVolume(getVolume());
         } else {
             utils.colorSingleKeyWithColor(key, pad.red);
             NodeAudioVolumeMixer.muteMaster(true);
@@ -122,7 +145,7 @@ const handleVolume = (key) => {
         }
     } else {
         // clear mute
-        pad.col(pad.off, [7, 8]);
+        pad.col(pad.red.low, [7, 8]);
         updateVolumeBarForVolume(volume);
         NodeAudioVolumeMixer.muteMaster(false);
         NodeAudioVolumeMixer.setMasterVolumeLevelScalar(
@@ -132,12 +155,25 @@ const handleVolume = (key) => {
 };
 
 const clearColumnColor = (k) => {
-    const xVal = k.x;
-    const yVal = k.y;
-    const arrayToClear = [];
-    for (let i = 0; i < yVal; i++) {
-        arrayToClear.push([xVal, i]);
+    const arrayToClear = createArrayForKey(k);
+    if (k.y === 8) {
+        dimVolumeBar();
+    } else {
+        pad.col(pad.off, arrayToClear);
     }
-
-    pad.col(pad.off, arrayToClear);
 };
+
+const createArrayForKey = (key) => {
+    const xVal = key.x;
+    const yVal = key.y;
+    const arrayToColor = [];
+    for (let i = 0; i < yVal; i++) {
+        arrayToColor.push([xVal, i]);
+    }
+    return arrayToColor;
+}
+
+function dimVolumeBar() {
+    const arrayToColor = createArrayForBarDisplay({ x: 7, y: getSystemVolume() });
+    volumeColorBarDisplayDimmed(arrayToColor);
+}
