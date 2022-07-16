@@ -22,6 +22,7 @@ In the order of buttons going from top you have:
 - Clock
 - Controls
 - Character
+- Draw
 ### Clock
 In this mode Launchpad displays a digital clock. It fits the hour and minutes, as well as a blinking second indicator.  
 You can use the 🔼 button to change the font face to:
@@ -39,6 +40,18 @@ There are 2 ways to do so:
 
 The text will scroll and the characters will be displayed in the Lawrence Sans 8x8 pixel font.
 
+### Draw
+Here you can draw anything you want on the main 8x8 grid with the use of the color picker.
+
+Current options:
+- clear all
+- clear color
+- green, amber and red in medium light
+- green, amber and red in full
+
+You can chose either of the option form the top row buttons.
+
+
 ## API
 This project not only enables interactions with the Launchpad via, well, the Launchpad, but it's also a web server. There are several endpoints that allow you to control the Launchpad.
 
@@ -51,8 +64,9 @@ This project not only enables interactions with the Launchpad via, well, the Lau
 - Add photos to this ReadMe
 - Audio bars visualizer (was done with C# [here](https://github.com/P3Hi/launchpad-audio-visualizer-for-launchpad-mini), will try something similar)
 - A better font than Lawrence Sans
-- Non-fixed widht font support (it's hardcoded 8 width)
+- Non-fixed width font support (it's hardcoded 8 width)
 - More clock fonts? Then the API would change from `GET` to `POST` and something like `{font: <string>}`
+- API for Draw mode. Perhaps to send over an image?
 
 ## Notes
 This project is kinda a resulf of "well, I'm not using it much often,w hat else could I do with it?" and then I remembered [Madeon Adventure Machine](https://adventuremachine.4thfloorcreative.co.uk/adventuremachine/) and went "oh, I can use JS".  
