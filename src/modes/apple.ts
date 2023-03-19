@@ -9,15 +9,15 @@ let backgroundColor: Color = Launchpad.Colors.off;
 let paused: boolean = false;
 
 export const initApple = (pad: Launchpad) => {
-    colorSingleKey(pad, [], Launchpad.Colors.amber.medium);
-    colorSingleKey(pad, [], Launchpad.Colors.green.medium);
-    colorSingleKey(pad, [], Launchpad.Colors.red.medium);
-    colorSingleKey(pad, [], Launchpad.Colors.off);
+    colorSingleKey(pad, [0, 8], Launchpad.Colors.amber.medium);
+    colorSingleKey(pad, [1, 8], Launchpad.Colors.green.medium);
+    colorSingleKey(pad, [2, 8], Launchpad.Colors.red.medium);
+    colorSingleKey(pad, [3, 8], Launchpad.Colors.off);
 
-    colorSingleKey(pad, [], Launchpad.Colors.amber.low);
-    colorSingleKey(pad, [], Launchpad.Colors.green.low);
-    colorSingleKey(pad, [], Launchpad.Colors.red.low);
-    colorSingleKey(pad, [], Launchpad.Colors.off);
+    colorSingleKey(pad, [4, 8], Launchpad.Colors.amber.low);
+    colorSingleKey(pad, [5, 8], Launchpad.Colors.green.low);
+    colorSingleKey(pad, [6, 8], Launchpad.Colors.red.low);
+    colorSingleKey(pad, [7, 8], Launchpad.Colors.off);
 
     // TODO: types
     let json = fs.readFileSync("./assets/bad_apple.json", "utf8");

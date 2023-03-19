@@ -2,9 +2,8 @@ import Launchpad from "launchpad-mini";
 import { PadArray, PadManager, Mode } from "./types/types";
 import { colorPad, colorFullGrid } from "./utils/lightsUtils";
 import { changeMode } from "./utils/modeUtils";
-import {handleDraw, initDraw } from "./modes/draw"
-import { initApple } from "./modes/apple";
-
+import { handleDraw, initDraw } from "./modes/draw";
+import { handleApple, initApple } from "./modes/apple";
 
 let padArray = new PadArray();
 padArray.buttons[0][0] = Launchpad.Colors.red;
@@ -19,27 +18,26 @@ manager.pad.connect().then(() => {
         console.log(`Key ${k.x},${k.y} down: ${k.pressed}`);
 
         if (k.pressed) {
-
             // switching modes
             if (k.x === 8) {
                 switch (k.y) {
-                    case 0: 
+                    case 0:
                         changeMode(manager, Mode.Time);
                         break;
-                    case 1: 
+                    case 1:
                         changeMode(manager, Mode.Draw);
                         break;
-                    case 2: 
+                    case 2:
                         changeMode(manager, Mode.Weather);
                         break;
-                    case 3: 
+                    case 3:
                         changeMode(manager, Mode.Apple);
                         break;
                     case 4:
                         changeMode(manager, Mode.Text);
                         break;
                     case 5:
-                        changeMode(manager, Mode.Controls)
+                        changeMode(manager, Mode.Controls);
                         break;
                     default:
                         break;
@@ -56,6 +54,7 @@ manager.pad.connect().then(() => {
                 case Mode.Weather:
                     break;
                 case Mode.Apple:
+                    handleApple(manager.pad, k)
                     break;
                 case Mode.Text:
                     break;
@@ -65,32 +64,22 @@ manager.pad.connect().then(() => {
                     break;
             }
         }
-
     });
-
 
     // mode handling
     manager.eventEmitter
         .on(Mode.Time.toString(), () => {
-            colorFullGrid(manager.pad, Launchpad.Colors.green)
+            colorFullGrid(manager.pad, Launchpad.Colors.green);
         })
         .on(Mode.Draw.toString(), () => {
             initDraw(manager.pad);
         })
-        .on(Mode.Weather.toString(), () => {
-
-        })
+        .on(Mode.Weather.toString(), () => {})
         .on(Mode.Apple.toString(), () => {
-            initApple(manager.pad)
-
+            initApple(manager.pad);
         })
-        .on(Mode.Text.toString(), () => {
-
-        })
-        .on(Mode.Controls.toString(), () => {
-
-        })
-
+        .on(Mode.Text.toString(), () => {})
+        .on(Mode.Controls.toString(), () => {});
 
     initPad();
 });
@@ -101,8 +90,8 @@ function initPad() {
     colorPad(manager.pad, padArray.buttons);
 }
 
-process.on('SIGINT', function() {
+process.on("SIGINT", function () {
     console.log("Exiting...");
-    manager.pad.disconnect()
+    manager.pad.disconnect();
     process.exit();
 });
