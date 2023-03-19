@@ -1,6 +1,11 @@
 import Launchpad from "launchpad-mini";
 import fs from "fs";
-import { colorArray, colorPad, colorSingleKey } from "../utils/lightsUtils";
+import {
+    colorArray,
+    colorFullGrid,
+    colorPad,
+    colorSingleKey,
+} from "../utils/lightsUtils";
 import { Color } from "launchpad-mini/types/lib/colors";
 
 let foregroundColor: Color = Launchpad.Colors.amber;
@@ -20,14 +25,17 @@ export const initApple = (pad: Launchpad) => {
     // colorSingleKey(pad, [7, 8], Launchpad.Colors.off);
 
     // TODO: types
-    let json = fs.readFileSync("./assets/bad_apple.json", "utf8");
+    // TODO: Cancel play when changing modes
+    let json = fs.readFileSync("./assets/bad_apple_4clr.json", "utf8");
     let jsonObj = JSON.parse(json);
     play(pad, jsonObj);
 };
 
 const play = (pad: Launchpad, jsonObj) => {
     return new Promise<void>((resolve, reject) => {
-        let previousFrame = [];
+        let previousFrameFull = [];
+        let previousFrameMid = [];
+        let previousFrameLow = [];
 
         let interval = setInterval(
             (gen) => {
@@ -35,23 +43,48 @@ const play = (pad: Launchpad, jsonObj) => {
 
                 if (done) {
                     clearInterval(interval);
-                    resolve();
+                    // resolve();
+                    play(pad, jsonObj); // replay
                 } else if (!paused) {
                     const newArray = getArrayOfCoordinatesForFrame(
                         get2DArrayForFrame(value)
                     );
-                    const toCleanArray = subtractArrays(
-                        previousFrame,
-                        newArray
+                    const toCleanArrayFull = subtractArrays(
+                        previousFrameFull,
+                        newArray.full
+                    );
+                    const toCleanArrayMid = subtractArrays(
+                        previousFrameMid,
+                        newArray.mid
+                    );
+                    const toCleanArrayLow = subtractArrays(
+                        previousFrameLow,
+                        newArray.low
                     );
 
-                    colorArray(pad, newArray, foregroundColor);
-                    colorArray(pad, toCleanArray, Launchpad.Colors.off);
+                    let midColor = Launchpad.Colors.amber.medium;
+                    let lowColor = Launchpad.Colors.amber.low;
 
-                    previousFrame = newArray;
+                    Object.assign(midColor, foregroundColor);
+                    midColor._level = midColor._level - 1;
+
+                    Object.assign(lowColor, foregroundColor);
+                    lowColor._level = lowColor._level - 2;
+
+                    colorArray(pad, newArray.full, foregroundColor);
+                    colorArray(pad, newArray.mid, midColor);
+                    colorArray(pad, newArray.low, lowColor);
+
+                    colorArray(pad, toCleanArrayFull, Launchpad.Colors.off);
+                    colorArray(pad, toCleanArrayMid, Launchpad.Colors.off);
+                    colorArray(pad, toCleanArrayLow, Launchpad.Colors.off);
+
+                    previousFrameFull = newArray.full;
+                    previousFrameMid = newArray.mid;
+                    previousFrameLow = newArray.low;
                 }
             },
-            93,
+            102,
             jsonObj[Symbol.iterator]()
         );
     });
@@ -60,7 +93,7 @@ const play = (pad: Launchpad, jsonObj) => {
 export const handleApple = (pad: Launchpad, key) => {
     if (key.y === 8) {
         // pick fg and bg colors
-        setColorsForKey(key.x)
+        setColorsForKey(key.x);
     } else if (key.x !== 8) {
         paused = !paused;
     }
@@ -75,15 +108,23 @@ const get2DArrayForFrame = (frame) => {
 };
 
 const getArrayOfCoordinatesForFrame = (frameArray) => {
-    let array = [];
+    let full = [];
+    let mid = [];
+    let low = [];
+    let all = [];
     for (let i = 0; i < frameArray.length; i++) {
         for (let j = 0; j < frameArray[i].length; j++) {
-            if (frameArray[i][j] === "x") {
-                array.push([j, i]);
+            all.push([j, i]);
+            if (frameArray[i][j] === "3") {
+                full.push([j, i]);
+            } else if (frameArray[i][j] === "2") {
+                mid.push([j, i]);
+            } else if (frameArray[i][j] === "1") {
+                low.push([j, i]);
             }
         }
     }
-    return array;
+    return { all, full, mid, low };
 };
 
 const subtractArrays = (subtractFrom, arr2) => {
@@ -134,6 +175,6 @@ const setColorsForKey = (x: number) => {
         //     break;
         default:
             foregroundColor = Launchpad.Colors.amber;
-            // backgroundColor = Launchpad.Colors.off;
+        // backgroundColor = Launchpad.Colors.off;
     }
 };

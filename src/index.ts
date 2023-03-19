@@ -91,7 +91,7 @@ function initPad() {
 }
 
 process.on("SIGINT", function () {
-    console.log("Exiting...");
+    console.log("Safe exit... Let's not break MIDI ports ^^");
     manager.pad.disconnect();
     process.exit();
 });
