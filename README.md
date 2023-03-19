@@ -1,6 +1,10 @@
 # launchpad-display
 A Node.js server for running the Novation Launchpad as an interactive display
 
+# 🏗️ Under Significant Rewrite ⚠️
+What you see now in this repo is under significant rewrite. Old code was very janky and unmaintainable. I'm leaving the rest of readme as is, and the functionality should be soon on par, or better than the old code.
+
+Also fixed node_modules since `.gitignore` didn't work for some odd reason, figures.
 ## What I've used
 - Node.js - obviously (though not really, there are great .NET libs for Launchpad)
 - [Lawrence Sans](https://github.com/codeincontext/Lawrence-Sans)

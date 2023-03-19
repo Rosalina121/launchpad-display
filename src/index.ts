@@ -3,6 +3,7 @@ import { PadArray, PadManager, Mode } from "./types/types";
 import { colorPad, colorFullGrid } from "./utils/lightsUtils";
 import { changeMode } from "./utils/modeUtils";
 import {handleDraw, initDraw } from "./modes/draw"
+import { initApple } from "./modes/apple";
 
 
 let padArray = new PadArray();
@@ -12,7 +13,7 @@ padArray.buttons[1][1] = Launchpad.Colors.green;
 let pad = new Launchpad();
 let manager = new PadManager(pad);
 
-pad.connect().then(() => {
+manager.pad.connect().then(() => {
     // key handling
     manager.pad.on("key", (k) => {
         console.log(`Key ${k.x},${k.y} down: ${k.pressed}`);
@@ -80,7 +81,7 @@ pad.connect().then(() => {
 
         })
         .on(Mode.Apple.toString(), () => {
-            colorFullGrid(manager.pad, Launchpad.Colors.red)
+            initApple(manager.pad)
 
         })
         .on(Mode.Text.toString(), () => {
@@ -93,9 +94,15 @@ pad.connect().then(() => {
 
     initPad();
 });
+
 function initPad() {
     manager.pad.reset();
     changeMode(manager, Mode.Startup);
     colorPad(manager.pad, padArray.buttons);
 }
 
+process.on('SIGINT', function() {
+    console.log("Exiting...");
+    manager.pad.disconnect()
+    process.exit();
+});
