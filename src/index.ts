@@ -3,7 +3,7 @@ import { PadArray, PadManager, Mode } from "./types/types";
 import { colorPad, colorFullGrid } from "./utils/lightsUtils";
 import { changeMode } from "./utils/modeUtils";
 import { handleDraw, initDraw } from "./modes/draw";
-import { handleApple, initApple } from "./modes/apple";
+import { handleApple, initApple, stopApple } from "./modes/apple";
 
 let padArray = new PadArray();
 padArray.buttons[0][0] = Launchpad.Colors.red;
@@ -79,7 +79,13 @@ manager.pad.connect().then(() => {
             initApple(manager.pad);
         })
         .on(Mode.Text.toString(), () => {})
-        .on(Mode.Controls.toString(), () => {});
+        .on(Mode.Controls.toString(), () => {})
+        .on('mode change', (mode) => {
+            // logic on any mode change
+            if (mode != Mode.Apple) {
+                stopApple();
+            }
+        })
 
     initPad();
 });

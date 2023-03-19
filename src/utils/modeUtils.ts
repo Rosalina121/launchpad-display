@@ -10,6 +10,7 @@ export const changeMode = (manager: PadManager, mode: Mode) => {
     // emit events after cleanup, so we don't clear what listeners draw
     manager.currentMode = mode;
     manager.eventEmitter.emit(mode.toString());
+    manager.eventEmitter.emit('mode change', mode)
 };
 
 const colorModeButtons = (pad: Launchpad, mode: Mode) => {

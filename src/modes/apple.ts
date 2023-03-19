@@ -12,6 +12,15 @@ let foregroundColor: Color = Launchpad.Colors.amber;
 // let backgroundColor: Color = Launchpad.Colors.off;
 
 let paused: boolean = false;
+let stop: boolean = false;
+
+export const stopApple = () => {
+    stop = true;
+    // argh but should work
+    setTimeout(() => {
+        stop = false;
+    },1000)
+}
 
 export const initApple = (pad: Launchpad) => {
     colorSingleKey(pad, [0, 8], Launchpad.Colors.amber.medium);
@@ -25,7 +34,7 @@ export const initApple = (pad: Launchpad) => {
     // colorSingleKey(pad, [7, 8], Launchpad.Colors.off);
 
     // TODO: types
-    // TODO: Cancel play when changing modes
+    // TODO: timings
     let json = fs.readFileSync("./assets/bad_apple_4clr.json", "utf8");
     let jsonObj = JSON.parse(json);
     play(pad, jsonObj);
@@ -45,6 +54,9 @@ const play = (pad: Launchpad, jsonObj) => {
                     clearInterval(interval);
                     // resolve();
                     play(pad, jsonObj); // replay
+                } else if (stop) {
+                    clearInterval(interval);
+                    resolve();
                 } else if (!paused) {
                     const newArray = getArrayOfCoordinatesForFrame(
                         get2DArrayForFrame(value)
@@ -108,6 +120,8 @@ const get2DArrayForFrame = (frame) => {
 };
 
 const getArrayOfCoordinatesForFrame = (frameArray) => {
+    // this... is a bit confusing but it works
+
     let full = [];
     let mid = [];
     let low = [];
