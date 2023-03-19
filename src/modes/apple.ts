@@ -4,7 +4,7 @@ import { colorArray, colorPad, colorSingleKey } from "../utils/lightsUtils";
 import { Color } from "launchpad-mini/types/lib/colors";
 
 let foregroundColor: Color = Launchpad.Colors.amber;
-let backgroundColor: Color = Launchpad.Colors.off;
+// let backgroundColor: Color = Launchpad.Colors.off;
 
 let paused: boolean = false;
 
@@ -14,10 +14,10 @@ export const initApple = (pad: Launchpad) => {
     colorSingleKey(pad, [2, 8], Launchpad.Colors.red.medium);
     colorSingleKey(pad, [3, 8], Launchpad.Colors.off);
 
-    colorSingleKey(pad, [4, 8], Launchpad.Colors.amber.low);
-    colorSingleKey(pad, [5, 8], Launchpad.Colors.green.low);
-    colorSingleKey(pad, [6, 8], Launchpad.Colors.red.low);
-    colorSingleKey(pad, [7, 8], Launchpad.Colors.off);
+    // colorSingleKey(pad, [4, 8], Launchpad.Colors.amber.low);
+    // colorSingleKey(pad, [5, 8], Launchpad.Colors.green.low);
+    // colorSingleKey(pad, [6, 8], Launchpad.Colors.red.low);
+    // colorSingleKey(pad, [7, 8], Launchpad.Colors.off);
 
     // TODO: types
     let json = fs.readFileSync("./assets/bad_apple.json", "utf8");
@@ -46,7 +46,7 @@ const play = (pad: Launchpad, jsonObj) => {
                     );
 
                     colorArray(pad, newArray, foregroundColor);
-                    colorArray(pad, toCleanArray, backgroundColor);
+                    colorArray(pad, toCleanArray, Launchpad.Colors.off);
 
                     previousFrame = newArray;
                 }
@@ -120,20 +120,20 @@ const setColorsForKey = (x: number) => {
         case 3:
             foregroundColor = Launchpad.Colors.off;
             break;
-        case 4:
-            backgroundColor = Launchpad.Colors.amber.low;
-            break;
-        case 5:
-            backgroundColor = Launchpad.Colors.green.low;
-            break;
-        case 6:
-            backgroundColor = Launchpad.Colors.red.low;
-            break;
-        case 7:
-            backgroundColor = Launchpad.Colors.off;
-            break;
+        // case 4:
+        //     backgroundColor = Launchpad.Colors.amber.low;
+        //     break;
+        // case 5:
+        //     backgroundColor = Launchpad.Colors.green.low;
+        //     break;
+        // case 6:
+        //     backgroundColor = Launchpad.Colors.red.low;
+        //     break;
+        // case 7:
+        //     backgroundColor = Launchpad.Colors.off;
+        //     break;
         default:
             foregroundColor = Launchpad.Colors.amber;
-            backgroundColor = Launchpad.Colors.off;
+            // backgroundColor = Launchpad.Colors.off;
     }
 };
