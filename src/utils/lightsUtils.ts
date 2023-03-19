@@ -1,18 +1,20 @@
 import Launchpad from "launchpad-mini";
 import { Color } from "launchpad-mini/types/lib/colors";
+import { myNumbers } from "../types/numbers";
+import { PadArray } from "../types/types";
+import { mapCharacterToPadArray } from "./characterUtils";
 
 export const colorArray = (pad: Launchpad, arr: number[][], color: Color) => {
     pad.col(color, arr)
 }
 
-export const colorPad = (pad: Launchpad, arr: Color[][]) => {
+export const colorGrid = (pad: Launchpad, arr: PadArray) => {
     let buttonPositions = {};
+    const buttons = arr.buttons;
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-            let buttonColor = arr[row][col]._name;
-
-            console.log(buttonColor)
+            let buttonColor = buttons[row][col]._name;
 
             if (buttonColor !== null) {
                 if (!buttonPositions[buttonColor]) {
@@ -22,7 +24,30 @@ export const colorPad = (pad: Launchpad, arr: Color[][]) => {
             }
         }
     }
-    console.log(buttonPositions)
+    for (let color in buttonPositions) {
+        if (color !== "off") {
+            let positions = buttonPositions[color];
+            pad.col(Launchpad.Colors[color], positions);
+        }
+    }
+};
+
+export const colorGridWithOff = (pad: Launchpad, arr: PadArray) => {
+    let buttonPositions = {};
+    const buttons = arr.buttons;
+
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+            let buttonColor = buttons[row][col]._name;
+
+            if (buttonColor !== null) {
+                if (!buttonPositions[buttonColor]) {
+                    buttonPositions[buttonColor] = [];
+                }
+                buttonPositions[buttonColor].push([col, row]);
+            }
+        }
+    }
     for (let color in buttonPositions) {
         let positions = buttonPositions[color];
         pad.col(Launchpad.Colors[color], positions);
@@ -89,6 +114,11 @@ export const clearAll = (pad: Launchpad) => {
     pad.reset();
 };
 
-export const drawNumberAtPos = (pad: Launchpad) => {
+export const drawNumberAtPos = (pad: Launchpad, number: number, position: number[], color: Color) => {
+    const tempArr: string[] = myNumbers[number];
 
+    // left the char inc ase of reusability
+    const arrForCharToDraw: PadArray = mapCharacterToPadArray(tempArr, color, position, "1")
+
+    colorGrid(pad, arrForCharToDraw)
 }

@@ -2,8 +2,6 @@ import Launchpad from "launchpad-mini";
 import fs from "fs";
 import {
     colorArray,
-    colorFullGrid,
-    colorPad,
     colorSingleKey,
 } from "../utils/lightsUtils";
 import { Color } from "launchpad-mini/types/lib/colors";

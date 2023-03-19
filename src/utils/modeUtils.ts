@@ -21,7 +21,7 @@ const colorModeButtons = (pad: Launchpad, mode: Mode) => {
     colorSingleKey(pad, keyToColor, Launchpad.Colors.green);
 };
 
-const getAvailableModeKeys = () => {
+const getAvailableModeKeys = (): number[][] => {
     // hacky fucky way to get no. enum values
     const numberOfModes = Object.keys(Mode).length / 2 - 1;
     let tempArr: number[][] = [];

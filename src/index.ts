@@ -1,10 +1,19 @@
 import Launchpad from "launchpad-mini";
 import { PadArray, PadManager, Mode } from "./types/types";
-import { colorPad, colorFullGrid } from "./utils/lightsUtils";
+import { colorGrid, colorFullGrid } from "./utils/lightsUtils";
 import { changeMode } from "./utils/modeUtils";
 import { handleDraw, initDraw } from "./modes/draw";
 import { handleApple, initApple, stopApple } from "./modes/apple";
+import readline from "readline";
+import { initTime, stopTime } from "./modes/time";
 
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+rl.setPrompt("Pad > ");
+
+// test init arr
 let padArray = new PadArray();
 padArray.buttons[0][0] = Launchpad.Colors.red;
 padArray.buttons[1][1] = Launchpad.Colors.green;
@@ -54,7 +63,7 @@ manager.pad.connect().then(() => {
                 case Mode.Weather:
                     break;
                 case Mode.Apple:
-                    handleApple(manager.pad, k)
+                    handleApple(manager.pad, k);
                     break;
                 case Mode.Text:
                     break;
@@ -69,7 +78,7 @@ manager.pad.connect().then(() => {
     // mode handling
     manager.eventEmitter
         .on(Mode.Time.toString(), () => {
-            colorFullGrid(manager.pad, Launchpad.Colors.green);
+            initTime(manager.pad);
         })
         .on(Mode.Draw.toString(), () => {
             initDraw(manager.pad);
@@ -80,24 +89,46 @@ manager.pad.connect().then(() => {
         })
         .on(Mode.Text.toString(), () => {})
         .on(Mode.Controls.toString(), () => {})
-        .on('mode change', (mode) => {
+        .on("mode change", (mode) => {
             // logic on any mode change
             if (mode != Mode.Apple) {
                 stopApple();
             }
-        })
+            if (mode != Mode.Time) {
+                stopTime();  // ZA WARDO!!
+            }
+        });
 
     initPad();
+
+    rl.prompt();
+    rl.on("line", (line) => {
+        switch (line.trim()) {
+            case "test":
+                console.log("test!");
+                break;
+            default:
+                console.log("Unknown command");
+                break;
+        }
+        rl.prompt();
+    }).on("close", () => {
+        safeClose();
+    });
 });
 
-function initPad() {
+const initPad = () => {
     manager.pad.reset();
     changeMode(manager, Mode.Startup);
-    colorPad(manager.pad, padArray.buttons);
+    colorGrid(manager.pad, padArray);
 }
 
-process.on("SIGINT", function () {
+const safeClose = () => {
     console.log("Safe exit... Let's not break MIDI ports ^^");
     manager.pad.disconnect();
     process.exit();
+};
+
+process.on("SIGINT", function () {
+    safeClose();
 });
